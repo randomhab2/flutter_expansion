@@ -3,7 +3,6 @@ import 'package:flutter_expansion/src/trigger_model.dart';
 import 'package:flutter_expansion/src/widgets/indicator.dart';
 import 'package:flutter_expansion/src/widgets/trigger_expansion_tile.dart';
 import 'package:flutter_expansion/src/widgets/trigger_list_tile.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 
 class TriggerList extends StatelessWidget {
   const TriggerList({
@@ -17,51 +16,6 @@ class TriggerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ...list.map((item) {
-          return item.children.isEmpty
-              //element has no children - render casual tile
-              ? Container(
-                  constraints: BoxConstraints(
-                    minHeight: 100, // Minimum height for the container
-                  ),
-                  child: TimelineTile(
-                    endChild: TriggerListTile(
-                      title: item.title,
-                      icon: item.icon,
-                      value: item.selected,
-                      onChanged: (value) {
-                        onToggleSelection(value!, item);
-                      },
-                    ),
-                  ),
-                )
-              //element has no children - render expansion tile
-              : Container(
-                  constraints: BoxConstraints(
-                    minHeight: 100, // Minimum height for the container
-                  ),
-                  child: TimelineTile(
-                    endChild: TriggerExpansionTile(
-                      title: item.title,
-                      icon: item.icon,
-                      value: item.selected,
-                      child: TriggerList(
-                        onToggleSelection: onToggleSelection,
-                        list: item.children,
-                      ),
-                      onChanged: (value) => onToggleSelection(
-                        value!,
-                        item,
-                      ),
-                    ),
-                  ),
-                );
-        }),
-      ],
-    );
     return ListView.builder(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -85,7 +39,7 @@ class TriggerList extends StatelessWidget {
                     ),
                   ],
                 )
-              //element has no children - render expansion tile
+              //element has children - render expansion tile
               : Stack(
                   children: [
                     if (item.timeline) const Indicator(),
